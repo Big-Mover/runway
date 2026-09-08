@@ -17,6 +17,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
+/* ARCHIVED-DO-NOT-MAINTAIN — light palette.
+   Light mode is archived: kept working, deliberately not maintained. Don't review,
+   screenshot, contrast-check or "fix" anything here, and never let a light-mode
+   problem hold up a change. The one rule that still applies: every token needs a
+   value in this block so the page can't render unstyled — that's maintenance of the
+   page, not of light mode. Read the "Light mode is archived" invariant in CLAUDE.md
+   before changing this. It is reopened only on the owner's explicit instruction. */
 :root{
   color-scheme:light;
   --bg:#f3f4f1; --surface:#ffffff; --surface-2:#e9ebe6; --line:#d9dcd6;
@@ -33,6 +40,7 @@
   --nav-active:#0e5a4e; --faint:#8a938f; --i-bg:rgba(0,0,0,.06); --hair:rgba(0,0,0,.09);
   --seg-on:#dfe2dc; --hero-shadow:0 6px 22px rgba(20,26,24,.10),inset 0 1px 0 rgba(255,255,255,.6);
 }
+/* Dark — the supported view. Both dark blocks below are live and must stay in sync. */
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
@@ -186,8 +194,31 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
 .what i{width:9px;height:9px;border-radius:3px;display:block;margin-top:6px}
 
 /* net worth */
+.tr.owe > i{background:none;border:1px dashed var(--ink-3);border-radius:3px}
+.tr.owe .v{color:var(--ink-2)}
+.tr.net{border-top:1px solid var(--line);margin-top:4px;padding-top:11px}
+.tr.net > i{background:none}
+.tr.net .nm{font-weight:700}
 .nwbar{display:flex;height:11px;border-radius:6px;overflow:hidden;gap:2px}
 .nwbar i{display:block;height:100%}
+/* deposit ledger — four auditable rows rather than one confident number */
+.dep{display:flex;flex-direction:column}
+.dep .r{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--hair)}
+.dep .r.tot{border-top:1px solid var(--line);border-bottom:0;margin-top:1px;padding-top:11px}
+.dep .l{font-size:13.5px}
+.dep .l span{display:block;font-size:11px;color:var(--ink-3);margin-top:2px}
+.dep .v{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:16px;white-space:nowrap}
+.dep .v i{font-style:normal;font-weight:500;font-size:11.5px;color:var(--ink-2);margin-left:7px}
+.dep .aside{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.dep .aside > b{display:block;font-size:12.5px;color:var(--ink-2);font-weight:600;margin-bottom:4px}
+.dep .aside .r{padding:6px 0;border-bottom:0}
+.dep .aside .v{font-size:14px}
+.dep .aside p{margin:8px 0 0;font-size:12.5px;color:var(--ink-3);line-height:1.5}
+.dep .say{margin-top:12px;font-size:13px;color:var(--ink-2);line-height:1.45}
+.dep .say b{color:var(--ink);font-weight:600}
+.dep .todo{margin-top:12px;background:var(--surface-2);border-radius:12px;padding:11px 13px;font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.dep .todo b{color:var(--ink);font-weight:600;display:block;margin-bottom:2px}
+.dep .todo code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:var(--i-bg);border-radius:4px;padding:1px 4px}
 .fi{display:flex;flex-direction:column;gap:8px}
 .fibar{height:11px;border-radius:6px;background:var(--surface-2);overflow:hidden}
 .fibar b{display:block;height:100%;background:var(--accent);border-radius:6px}
@@ -360,7 +391,7 @@ nav button:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
         <div class="t">Where it goes<button class="i" data-for="n-wig">i</button></div>
         <div class="seg" id="wigrange"></div>
       </div>
-      <p class="note" id="n-wig" hidden>Average spend per week in each category over the window, split by what the money was for rather than which saver paid for it.</p>
+      <p class="note" id="n-wig" hidden>Average spend per week in each category, split by what the money was <em>for</em> rather than which saver paid for it — a fun saver topping up Spending isn't fun spending. The window is the period the buttons above pick, and every figure is that window's total divided by the weeks in it: <b>Fortnight</b> the last 14 days, <b>Month</b> the last 30, <b>YTD</b> since 1 January, <b>FY</b> since 1 July, <b>All</b> everything on record. The line below shows the window's actual start date. A long window tells you what's normal; a short one tells you what's happening now, and the two disagreeing is usually the interesting part.</p>
       <div class="since" id="wigsum"></div>
       <div class="wigrows" id="wig"></div>
       <div class="wiglegend" id="wiglegend"></div>
@@ -392,7 +423,7 @@ nav button:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
 
     <div class="card">
       <div class="hdr"><div class="lhs"><h2>Assumptions</h2><button class="i" data-for="n-as">i</button></div></div>
-      <p class="note" id="n-as" hidden>Casual pay is what a working fortnight brings in; the slider is how many fortnights you expect to actually work. Fixed costs come from config (rent, bills, the B set-aside). Eating-out and giving targets are yours to set — they don't affect the runway maths, they're what the weekly trackers measure against.</p>
+      <p class="note" id="n-as" hidden>Casual pay is what a working fortnight brings in; the slider is how many fortnights you expect to actually work. Fixed costs come from config (rent, bills, the B set-aside). Eating-out and giving targets are yours to set — they don't affect the runway maths, they're what the weekly trackers measure against. Income and the HELP balance drive one thing only: the deposit card on Money, which needs what an extra dollar costs you rather than your average rate. Income rather than a bracket picker, because the HELP threshold sits inside a bracket — only your actual income says which side of it you're on.</p>
       <div class="two">
         <div class="field"><label for="pay">Casual pay / fortnight</label><div class="numin">$<input id="pay" type="number" inputmode="numeric" min="0" step="50"></div></div>
         <div class="field"><label for="util">Fortnights you'll work</label><div class="out"><b id="utilval" class="num"></b></div><input id="util" type="range" min="0" max="100" step="5"></div>
@@ -401,6 +432,11 @@ nav button:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
         <div class="field"><label for="tEat">Eating out / week</label><div class="numin">$<input id="tEat" type="number" inputmode="numeric" min="0" step="10"></div></div>
         <div class="field"><label for="tGive">Giving / week</label><div class="numin">$<input id="tGive" type="number" inputmode="numeric" min="0" step="10"></div></div>
       </div>
+      <div class="two">
+        <div class="field"><label for="tInc">Taxable income / year</label><div class="numin">$<input id="tInc" type="number" inputmode="numeric" min="0" step="1000"></div></div>
+        <div class="field"><label for="tHelp">HELP / HECS still owing</label><div class="numin">$<input id="tHelp" type="number" inputmode="numeric" min="0" step="500"></div></div>
+      </div>
+      <p class="small muted" id="taxnote"></p>
       <p class="small muted" id="fixednote"></p>
     </div>
 
@@ -451,14 +487,20 @@ nav button:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
         <div class="lhs"><div><div class="eyebrow">Net worth</div><div class="big num" style="font-size:26px" id="nwtotal"></div></div><button class="i" data-for="n-nw">i</button></div>
         <div class="stamp" style="text-align:right">excl. super<br><b class="num" id="nwex"></b></div>
       </div>
-      <p class="note" id="n-nw" hidden>Up balances come from the API each morning. Everything outside Up is typed in by hand and drifts until it's updated — the unit counts are the durable record, the dollar values are a snapshot from <span id="nwasof2"></span>.</p>
+      <p class="note" id="n-nw" hidden></p>
       <div class="nwbar" id="nwbar"></div>
       <div id="nwrows"></div>
     </div>
 
     <div class="card">
+      <div class="hdr"><div class="lhs"><h2>Deposit, after tax</h2><button class="i" data-for="n-dep">i</button></div></div>
+      <p class="note" id="n-dep" hidden>The deposit sits in savings while you decide whether to buy, and savings interest is taxed as income — so the honest comparison isn't the headline rate against inflation, it's what's left after your marginal rate. Inflation is fetched each morning from the ABS (with the RBA as a fallback) and is never guessed — if it can't be had, or the last one is too old, the real-return row is held back rather than estimated. The saver rate is in <code>config.json</code>; your income and HELP balance are on Strategy.</p>
+      <div class="dep" id="dep"></div>
+    </div>
+
+    <div class="card">
       <div class="hdr"><div class="lhs"><h2>Freedom progress</h2><button class="i" data-for="n-fi">i</button></div></div>
-      <p class="note" id="n-fi" hidden>The freedom number is annual spend × 25 — roughly the balance at which investment returns could cover your spending indefinitely. It moves with your spending, so trimming a habit lowers the target as well as raising the savings. Super is included in progress even though you can't touch it yet.</p>
+      <p class="note" id="n-fi" hidden>The freedom number is annual spend × 25 — roughly the balance at which investment returns could cover your spending indefinitely. It moves with your spending, so trimming a habit lowers the target as well as raising the savings. Super is included in progress even though you can't touch it yet, and your HELP debt is subtracted — progress is measured on what you're actually worth, not what you hold.</p>
       <div class="fi">
         <div class="row"><span class="big num" style="font-size:30px" id="fiPct"></span><span class="sub" id="fiOf"></span></div>
         <div class="fibar"><b id="fibarfill"></b></div>
@@ -572,6 +614,7 @@ const k = n => Math.abs(n) >= 1e6 ? (n/1e6).toFixed(2)+'M' : Math.abs(n) >= 1000
 const dfmt = d => new Date(d).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
 const dmed = d => new Date(d).toLocaleDateString('en-AU',{month:'short',year:'numeric'});
 const dshort = d => new Date(d).toLocaleDateString('en-AU',{day:'numeric',month:'short'});
+const dshortY = d => new Date(d).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'});
 const asOf = new Date(M.as_of);
 const WPM = M.config.weeks_per_month;                 // weeks per month
 const MO = w => w * 52 / 12;                          // per-week rate → per-month rate
@@ -584,6 +627,7 @@ const JN = {living:'Living', eatout:'Eating out', fun:'Fun', giving:'Giving', ca
 const defTarget = M.goal.target_end;
 let state = {target: defTarget, pay: M.income.per_pay, util: Math.round(M.income.utilisation*100),
              tEat: M.checkin.targets.eatout, tGive: M.checkin.targets.giving,
+             tInc: M.deposit.tax.income, tHelp: M.deposit.tax.help.balance,
              win: 'month', wigwin: 'month', tab: 'dash'};
 try{ const s = JSON.parse(localStorage.getItem('runway.v2')||'null'); if(s) state = {...state, ...s}; }catch(e){}
 if(!state.target || isNaN(new Date(state.target))) state.target = defTarget;
@@ -880,9 +924,12 @@ function segs(id, key, cb){
 function wig(){
   const W = M.windows[state.wigwin], rows = W.where_it_goes.slice(0,8), max = rows[0]?.per_week||1, bj = W.by_jar;
   const tot = JARS.reduce((a,j)=>a+(bj[j]||0),0);
-  $('wigsum').innerHTML = `since ${dshort(W.start)} · <b>$${fmt(MO(tot))}</b> per month`;
+  // FY and All reach back past January, so "since 30 Jun" alone is ambiguous — and those two
+  // start in different years, which is exactly what the reader needs to tell apart.
+  const spans = state.wigwin === 'fy' || state.wigwin === 'all';
+  $('wigsum').innerHTML = `since ${(spans ? dshortY : dshort)(W.start)} · <b>$${fmt(tot)}</b> per week`;
   $('wig').innerHTML = rows.map(r => `<div>
-    <div class="top"><div class="nm"><i style="background:var(--${r.jar})"></i><span>${r.sub}</span></div><div class="v">$${fmt(MO(r.per_week))}</div></div>
+    <div class="top"><div class="nm"><i style="background:var(--${r.jar})"></i><span>${r.sub}</span></div><div class="v">$${fmt(r.per_week)}</div></div>
     <div class="track"><b style="width:${(r.per_week/max*100).toFixed(0)}%;background:var(--${r.jar})"></b></div></div>`).join('');
   const used = [...new Set(rows.map(r=>r.jar))];
   $('wiglegend').innerHTML = used.map(j=>`<span><i style="background:var(--${j})"></i>${JN[j]}</span>`).join('');
@@ -913,6 +960,8 @@ function plan(){
   $('pay').value = state.pay; $('util').value = state.util; $('util').style.setProperty('--pct', state.util+'%');
   $('utilval').textContent = state.util===100 ? 'All of them' : state.util===0 ? 'None' : `${state.util}%`;
   $('tEat').value = state.tEat; $('tGive').value = state.tGive;
+  $('tInc').value = state.tInc; $('tHelp').value = state.tHelp;
+  taxNote();
   $('fixednote').textContent = `Fixed each month: rent $${fmt(MO(M.fixed.rent_wk))} + bills $${fmt(MO(M.fixed.bills_wk))} + B set-aside $${fmt(MO(M.fixed.gifts_wk))} = $${fmt(MO(fixed))}. Living burn trend $${fmt(MO(burn))}/mo. Income assumed $${fmt(MO(inc))}/mo.`;
 }
 
@@ -965,18 +1014,139 @@ function chart(){
 }
 
 /* ---------- money ---------- */
+// What an extra dollar of income actually costs him. Not his average rate, and not just his
+// bracket: a HELP debt adds a repayment on every dollar over the threshold, which is what
+// takes 32% to ~47%. Returns the parts so the card can show its working.
+function margin(){
+  const T = M.deposit.tax, inc = state.tInc, help = state.tHelp;
+  const tier = list => list.filter(b => inc >= b.from).pop() || {rate: 0};
+  const br = tier(T.brackets);
+  // Tiered like the brackets, not a single rate: the second HELP tier starts around $125k,
+  // and showing 15% there would be a confidently wrong number.
+  const helpRate = help > 0 ? tier(T.help.tiers).rate : 0;
+  return {income: inc, tax: br.rate, medicare: T.medicare, help: helpRate,
+          total: br.rate + T.medicare + helpRate};
+}
+
+// Its own function so the two inputs that feed it can redraw just this, rather than running
+// the whole goal-setter for a number the goal-setter does not use.
+function taxNote(){
+  const m = margin();
+  $('taxnote').textContent = `An extra dollar costs you ${(m.total*100).toFixed(0)}% — `
+    + `${(m.tax*100).toFixed(0)}% tax + ${(m.medicare*100).toFixed(0)}% medicare`
+    + (m.help ? ` + ${(m.help*100).toFixed(0)}% HELP` : ' (no HELP repayment at this income)')
+    + `. The deposit card taxes your savings interest at ${((m.tax + m.medicare)*100).toFixed(0)}%`
+    + (m.help ? ' and shows the HELP repayment separately, since that pays down your debt rather than being lost.' : '.');
+}
+
+// The whole chain, not just the answer: he can audit every step, and the one step that
+// depends on a number nobody has entered yet says so instead of guessing it.
+function deposit(){
+  const D = M.deposit, m = margin(), bal = D.balance;
+  const pc = r => (r < 0 ? '\u2212' : '') + (Math.abs(r)*100).toFixed(2).replace(/\.?0+$/,'') + '%';
+  const row = (cls, label, sub, val, rate) =>
+    `<div class="r ${cls}"><div class="l">${label}${sub?`<span>${sub}</span>`:''}</div>
+     <div class="v">${val}${rate?`<i>${rate}</i>`:''}</div></div>`;
+
+  const interest = bal * D.nominal_rate;
+  const taxRate = m.tax + m.medicare;
+  // HELP is deliberately NOT in this calculation. A repayment isn't lost — it retires debt
+  // Don already owes, and that debt is now subtracted in net worth above. Charging it here
+  // as well would count the same dollar twice: once as money gone, once as a liability it
+  // just reduced. Tax is a real loss; a HELP repayment is a transfer. It gets its own note
+  // below the total instead, so it stays visible without distorting the comparison.
+  const helpCut = interest * m.help;
+  const kept = interest * (1 - taxRate);
+  const keptRate = D.nominal_rate * (1 - taxRate);
+
+  let html =
+    row('', 'Parked in deposit savers', 'across your Up deposit accounts', '$'+fmt(Math.round(bal)), '') +
+    row('', 'Earns', 'saver rate', '+$'+fmt(Math.round(interest))+' a year', pc(D.nominal_rate)) +
+    row('', 'Tax on the interest', `income tax + medicare, on $${fmt(m.income)} a year`,
+        '\u2212$'+fmt(Math.round(interest*taxRate))+' a year', pc(taxRate)) +
+    row('tot', 'Keeps', 'after tax', '+$'+fmt(Math.round(kept))+' a year', pc(keptRate));
+
+  if(D.cpi === null){
+    html += `<div class="todo"><b>${D.cpi_state === 'stale'
+        ? 'The inflation figure is out of date'
+        : 'Waiting on the inflation figure'}</b>
+      Everything above is exact. CPI is fetched each morning from the ABS, and the real return is
+      held back rather than estimated — at this rate it's close enough to the line that a guess
+      would decide the answer. ${D.cpi_state === 'stale'
+        ? 'The last figure is too old to stand behind, so the fetch has been failing for a while.'
+        : 'No figure has come back yet.'} The "Check data sources" workflow says which source
+      answered and what the others said.</div>`;
+  } else {
+    const realRate = keptRate - D.cpi, realPa = bal * realRate;
+    // Name the quarter, not the fetch date: CPI is quarterly, and "year to Jun 2026" says
+    // what the figure covers, where a bare date looks like it might be a daily reading.
+    const q = D.cpi_period ? `year to ${['Mar','Jun','Sep','Dec'][+D.cpi_period.split('-Q')[1] - 1]} `
+                             + D.cpi_period.split('-Q')[0]
+                           : `CPI to ${dfmt(D.cpi_as_of)}`;
+    html += row('', 'Inflation', q, '\u2212'+pc(D.cpi), '') +
+            row('tot', 'Real return', 'in today\'s money',
+                (realPa >= 0 ? '+$' : '\u2212$') + fmt(Math.round(Math.abs(realPa))) + ' a year', pc(realRate));
+    // Within a couple of tenths of zero the signed figure would flip between quarters, so
+    // don't print a direction the next CPI release could reverse.
+    html += `<div class="say">${Math.abs(realRate) < 0.005
+      ? 'Near enough to <b>holding its value</b> — after tax, the interest is roughly keeping pace with inflation.'
+      : realRate > 0
+        ? `Keeping ahead of inflation by about <b>$${fmt(Math.round(Math.abs(realPa)))} a year</b> in today's money.`
+        : `Losing about <b>$${fmt(Math.round(Math.abs(realPa)))} a year</b> of buying power, even with the interest.`}</div>`;
+  }
+
+  // Below the line, deliberately: the repayment is real cash out of the year, but it buys
+  // down a debt rather than vanishing, so it belongs beside the calculation and not inside it.
+  if(m.help) html += `<div class="aside">
+    <b>Separately — the HELP repayment on this interest</b>
+    <div class="r"><div class="l">This interest triggers</div>
+      <div class="v">\u2212$${fmt(Math.round(helpCut))} a year<i>${pc(m.help)}</i></div></div>
+    <div class="r"><div class="l">Which comes off</div>
+      <div class="v">$${fmt(state.tHelp)} owing</div></div>
+    <div class="r"><div class="l">Leaving</div>
+      <div class="v">$${fmt(Math.max(0, state.tHelp - Math.round(helpCut)))} owing</div></div>
+    <p>Left out of the figures above on purpose. It leaves your cash, but it isn't lost — it
+    buys down a debt that's already subtracted from your net worth, so counting it here too
+    would charge you twice for the same dollar. Your buying power is unchanged by it; only
+    the timing is.</p></div>`;
+  $('dep').innerHTML = html;
+}
+
 function money(){
   const N = M.networth;
   const col = {up_cash:'var(--living)', reserve:'var(--eatout)', deposit:'var(--accent)', cash_other:'var(--giving)', investments:'var(--fun)', crypto:'var(--warn)', super:'var(--card)'};
-  $('nwtotal').textContent = '$'+fmt(N.total); $('nwex').textContent = '$'+fmt(N.ex_super); $('nwasof2').textContent = dfmt(N.as_of);
-  $('nwbar').innerHTML = N.buckets.filter(b=>b.value>0).map(b => `<i style="width:${(b.value/N.total*100).toFixed(2)}%;background:${col[b.key]}"></i>`).join('');
+  // Net worth is assets minus what he owes. The HELP balance is a Strategy input, so read it
+  // from there rather than from the model — otherwise editing it there would move the deposit
+  // card and leave this number stale.
+  const owed = Math.max(0, state.tHelp || 0);
+  const total = N.assets - owed, exSuper = N.assets_ex_super - owed;
+  $('nwtotal').textContent = '$'+fmt(total); $('nwex').textContent = '$'+fmt(exSuper);
+  // Three provenances now sit in this one number, and the note has to be honest about which
+  // is which: Up is live, the tickered holdings are repriced each morning, and the rest is
+  // still Don's handwritten list. Written here rather than in the markup because the middle
+  // clause disappears entirely on a day no quote came back.
+  $('n-nw').textContent = 'Up balances come from the API each morning'
+    + (N.priced_n ? `, and the ETFs and crypto are repriced from live quotes — last ${dfmt(N.priced_at)}` : '')
+    + `. Everything else outside Up is typed in by hand and drifts until it's updated — the unit counts are the durable record, the dollar values a snapshot from ${dfmt(N.as_of)}.`
+    + (owed ? ' Your HELP debt is subtracted here: it earns no interest but is indexed to inflation each June, and it comes off what you\'re worth like any other debt. Update the balance on Strategy.' : '');
+  // The bar and the percentages stay proportions of assets, not of net worth: a debt has no
+  // share of a pie, and dividing by the smaller net figure would push the slices past 100%.
+  $('nwbar').innerHTML = N.buckets.filter(b=>b.value>0).map(b => `<i style="width:${(b.value/N.assets*100).toFixed(2)}%;background:${col[b.key]}"></i>`).join('');
   $('nwrows').innerHTML = N.buckets.map(b => `<div class="tr ${b.liquid?'':'dim'}"><i style="background:${col[b.key]}"></i>
     <div><div class="nm">${b.label}</div>${b.liquid?'':'<div class="small muted">locked until preservation age</div>'}</div>
-    <div class="v">$${fmt(b.value)}<span>${(b.value/N.total*100).toFixed(0)}%</span></div></div>`).join('');
-  $('fiPct').textContent = N.freedom_pct + '%';
+    <div class="v">$${fmt(b.value)}<span>${(b.value/N.assets*100).toFixed(0)}%</span></div></div>`).join('')
+    + (owed ? `<div class="tr owe"><i></i>
+      <div><div class="nm">HELP / HECS debt</div><div class="small muted">indexed to inflation each June, not charged interest</div></div>
+      <div class="v">\u2212$${fmt(owed)}<span>owed</span></div></div>
+      <div class="tr net"><i></i><div><div class="nm">Net worth</div>
+      <div class="small muted">$${fmt(N.assets)} of assets less what you owe</div></div>
+      <div class="v">$${fmt(total)}<span>&nbsp;</span></div></div>` : '');
+  const fiPct = Math.round(total / N.freedom_number * 1000) / 10;
+  $('fiPct').textContent = fiPct + '%';
   $('fiOf').textContent = `of $${k(N.freedom_number)} — the balance that could cover your spending for good`;
-  $('fibarfill').style.width = Math.min(100, N.freedom_pct) + '%';
+  $('fibarfill').style.width = Math.min(100, fiPct) + '%';
   $('fiSpendMo').textContent = fmt(N.annual_spend/12); $('fiSpend').textContent = k(N.annual_spend); $('fiNum').textContent = k(N.freedom_number);
+  deposit();
   $('cons').innerHTML = N.consolidate.map(c => `<div class="c"><div>${c.name}${c.note?`<span>${c.note}</span>`:''}</div><div class="num" style="font-weight:600">$${fmt(c.value)}</div></div>`).join('')
     + `<div class="c"><div>VDHG in two places<span>Westpac Securities and Vanguard direct — one holding is easier to track</span></div><div class="num muted" style="font-weight:600">—</div></div>`;
 }
@@ -987,6 +1157,10 @@ $('pay').addEventListener('change', e => { state.pay = Math.max(0, +e.target.val
 $('util').addEventListener('input', e => { state.util = +e.target.value; save(); plan(); timeline(); week(); whatChanged(); });
 $('tEat').addEventListener('change', e => { state.tEat = Math.max(0, +e.target.value||0); save(); week(); plan(); });
 $('tGive').addEventListener('change', e => { state.tGive = Math.max(0, +e.target.value||0); save(); week(); plan(); });
+$('tInc').addEventListener('change', e => { state.tInc = Math.max(0, +e.target.value||0); save(); taxNote(); deposit(); });
+// money() redraws the deposit card itself, and the HELP balance now moves net worth too —
+// calling deposit() alone left the Money tab showing a debt the user had just cleared.
+$('tHelp').addEventListener('change', e => { state.tHelp = Math.max(0, +e.target.value||0); save(); taxNote(); money(); });
 segs('range','win',chart); segs('wigrange','wigwin',wig);
 
 const toMon = (8-asOf.getDay())%7 || 7;
