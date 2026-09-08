@@ -269,7 +269,12 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
 .jars .hd{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:6px}
 .jars .hd .t{display:flex;align-items:baseline;gap:8px;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:18px}
 .jars .hd .lft{font-size:11.5px;color:var(--ink-3)}
-.jarrow{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--hair)}
+/* Every jar row is a button — it opens that jar's own view. The resets live here rather
+   than in a separate rule because there is no non-button .jarrow left. */
+.jarrow{display:flex;align-items:center;gap:10px;width:100%;padding:13px 0;border:0;border-top:1px solid var(--hair);background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.jarrow:active{opacity:.62}
+.jarrow:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:8px}
+.jarrow .go{flex:none;width:9px;text-align:right;font-style:normal;font-size:15px;line-height:1;color:var(--ink-3)}
 .jarrow.first{margin-top:6px}
 .jarrow.last{padding-bottom:15px}
 .jarrow .nm{width:96px;white-space:nowrap;font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:8px}
@@ -285,6 +290,54 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4
 .jarrow .pace{position:absolute;top:0;bottom:0;width:2px;background:rgba(244,241,236,.7)}
 .jarrow .gut{width:44px;text-align:right;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:16px}
 .jarrow .gut.none{text-align:center;color:var(--ink-2)}
+
+/* week swipe — the cards above "Where it goes" move together through recent weeks.
+   pan-y keeps vertical scrolling with the browser; only the horizontal axis is ours. */
+#weekcards{touch-action:pan-y;will-change:transform}
+.wknav{display:flex;align-items:center;gap:10px;margin:0 20px 10px;height:22px}
+.wknav .ar{width:26px;height:22px;flex:none;border:0;border-radius:7px;background:var(--surface);color:var(--ink-2);font:inherit;font-size:15px;line-height:1;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wknav .ar:disabled{opacity:.3;cursor:default}
+.wknav .ar:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.wknav .ticks{flex:1;display:flex;align-items:center;justify-content:center;gap:5px}
+/* One tick per week in range, oldest left. The week being viewed is the wide one, so
+   "where am I" reads without counting; the current week keeps a mark of its own so there
+   is always something saying which end is now. */
+.wknav .ticks i{width:5px;height:5px;border-radius:3px;background:var(--track);display:block;transition:width .18s,background .18s}
+.wknav .ticks i.now{background:var(--ink-3)}
+.wknav .ticks i.on{width:15px;background:var(--accent)}
+
+/* jar detail — one jar on its own. Borrows the hero's elevation for its headline and then
+   drops to groundless sections, so the drill-down reads as the same surface language as
+   the screen it came from rather than as a new kind of page. */
+.jvback{display:flex;align-items:center;gap:7px;margin:0 16px;padding:2px 0 12px;border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--ink-2);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.jvback:active{opacity:.6}
+.jvback b{font-size:18px;line-height:.8}
+.jvhero{margin:0 16px;padding:20px;background:var(--card-raised);border-radius:18px;box-shadow:var(--hero-shadow)}
+.jvhero .fig{display:flex;align-items:flex-end;gap:8px;margin-top:9px}
+.jvhero .fig b{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:46px;line-height:.88;letter-spacing:-.035em}
+.jvhero .fig span{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:17px;color:var(--ink-3);padding-bottom:4px}
+.jvhero .sub{font-size:13px;color:var(--ink-2);margin-top:13px;line-height:1.55}
+.jvhero .sub b{color:var(--ink);font-weight:600}
+.jvsec{margin:24px 20px 0}
+.jvsec .hd{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.jvsec .hd .t{display:flex;align-items:baseline;gap:8px;font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:18px;white-space:nowrap}
+.jvsec .since{margin-top:8px;font-size:11.5px;color:var(--faint)}
+.jvsec .since b{color:var(--ink-2);font-weight:400}
+.jvper{margin-top:13px;display:flex;flex-direction:column;gap:12px}
+.jvper .r{display:grid;grid-template-columns:62px 1fr 58px;align-items:center;gap:11px;font-size:13.5px}
+.jvper .k{color:var(--ink-3)}
+.jvper .r.on .k,.jvper .r.on .v{color:var(--ink)}
+.jvper .t{height:6px;border-radius:3px;background:var(--track)}
+.jvper .t b{display:block;height:100%;border-radius:3px;opacity:.55}
+.jvper .r.on .t b{opacity:1}
+.jvper .v{text-align:right;font-weight:600;color:var(--ink-2)}
+/* The ledger closes the category list onto the burn figure. Same shape as the deposit
+   card's working: rows, then a ruled total. */
+.jvledger{display:flex;flex-direction:column;gap:10px}
+.jvledger:not(:empty){margin-top:14px;padding-top:12px;border-top:1px solid var(--hair)}
+.jvledger .r{display:flex;justify-content:space-between;gap:14px;font-size:13.5px;color:var(--ink-2)}
+.jvledger .r.tot{padding-top:11px;border-top:1px solid var(--hair);font-size:14.5px;font-weight:600;color:var(--ink)}
+.jvnote{margin-top:14px;font-size:12.5px;color:var(--ink-2);line-height:1.6}
 
 /* extra saved strip */
 .xsaved{display:flex;align-items:center;gap:12px;margin:12px 16px 0;padding:14px 16px;background:var(--surface);border-radius:14px}
@@ -370,6 +423,16 @@ nav button:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
 
   <!-- ══════════ DASHBOARD ══════════ -->
   <div data-tab="dash">
+   <div id="dashmain">
+    <!-- Pull the cards right for the previous week. The arrows and ticks are the same
+         navigation made visible — a gesture nobody knows about is not a feature. -->
+    <div class="wknav" id="wknav" hidden>
+      <button class="ar" id="wkprev" aria-label="Previous week">‹</button>
+      <div class="ticks" id="wkticks"></div>
+      <button class="ar" id="wknext" aria-label="Next week">›</button>
+    </div>
+
+   <div id="weekcards">
     <div class="hero" id="hero">
       <div class="ey"><span id="herolabel">So far this week</span><button class="i" data-for="n-hero">i</button></div>
       <p class="note" id="n-hero" hidden>Spend to date against the plan to date, Monday to Sunday. Saved doesn't carry over between weeks. Green is only ever saved dollars — over and under are both just distance from plan.</p>
@@ -381,7 +444,7 @@ nav button:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
         <div class="t">Jars<button class="i" data-for="n-jars">i</button></div>
         <div class="lft" id="jarsleft"></div>
       </div>
-      <p class="note" id="n-jars" hidden>Spent against this week's target per jar. The line marks how far through the week we are — the fill catching up to it is on pace. Fun has no weekly target, so its bar stays dim.</p>
+      <p class="note" id="n-jars" hidden>Spent against this week's target per jar. The line marks how far through the week we are — the fill catching up to it is on pace. Fun has no weekly target, so its bar stays dim. Tap any jar for that jar on its own: what it costs now, how that compares with the last fortnight, month or year, and what it goes on.</p>
       <div id="jarrows"></div>
     </div>
 
@@ -396,7 +459,10 @@ nav button:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
       <div class="ey">This week's plan</div>
       <div class="fig" id="planfig"></div>
     </div>
+   </div>
 
+    <!-- Outside #weekcards on purpose: "Where it goes" answers a different question over a
+         window of its own, and dragging it along would make its selector mean two things. -->
     <div class="wig">
       <div class="hd">
         <div class="t">Where it goes<button class="i" data-for="n-wig">i</button></div>
@@ -406,6 +472,43 @@ nav button:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
       <div class="since" id="wigsum"></div>
       <div class="wigrows" id="wig"></div>
       <div class="wiglegend" id="wiglegend"></div>
+    </div>
+   </div>
+
+    <!-- One jar on its own, opened by tapping its row on the Jars card. Read-only, like the
+         rest of Dashboard: the only control is a period toggle. -->
+    <div id="jarview" hidden>
+      <button class="jvback" id="jarback"><b>‹</b>Dashboard</button>
+      <div class="jvhero">
+        <div class="ey"><span>Trend</span><button class="i" data-for="n-jv">i</button></div>
+        <p class="note" id="n-jv" hidden>This jar's smoothed spending rate — the same 3-week half-life trend the rest of the page runs on, so a single loud week nudges it rather than yanking it. Everything below is this jar alone.</p>
+        <div class="fig"><b id="jvrate"></b><span>a week</span></div>
+        <div class="sub" id="jvsub"></div>
+      </div>
+
+      <div class="jvsec">
+        <div class="hd"><div class="t">Across periods</div></div>
+        <div class="since">what this jar burns per week, averaged over each span</div>
+        <div class="jvper" id="jvper"></div>
+      </div>
+
+      <div class="jvsec">
+        <div class="hd">
+          <div class="t">Spending over time<button class="i" data-for="n-jvtime">i</button></div>
+          <div class="seg" id="jvrange"></div>
+        </div>
+        <p class="note" id="n-jvtime" hidden>What this jar actually cost, period by period, over the window above — days on the shorter windows, weeks on the longer ones. No trend line here: this is what happened, not what it's heading towards.</p>
+        <div class="chart" id="jvchart"></div>
+      </div>
+
+      <div class="jvsec">
+        <div class="hd"><div class="t">Where it goes<button class="i" data-for="n-jvwig">i</button></div></div>
+        <p class="note" id="n-jvwig" hidden>What the jar was spent on, ranked, over the same window. The rows are what was paid at the till; anything that came back, or was set aside rather than spent, is named below them so the list adds up to the figure this jar actually burns.</p>
+        <div class="since" id="jvwigsum"></div>
+        <div class="wigrows" id="jvwig"></div>
+        <div class="jvledger" id="jvledger"></div>
+        <p class="jvnote" id="jvnote" hidden></p>
+      </div>
     </div>
   </div>
 
@@ -639,7 +742,7 @@ const defTarget = M.goal.target_end;
 let state = {target: defTarget, pay: M.income.per_pay, util: Math.round(M.income.utilisation*100),
              tEat: M.checkin.targets.eatout, tGive: M.checkin.targets.giving,
              tInc: M.deposit.tax.income, tHelp: M.deposit.tax.help.balance,
-             win: 'month', wigwin: 'month', wigall: false, tab: 'dash'};
+             win: 'month', wigwin: 'month', wigall: false, jarwin: 'month', tab: 'dash'};
 try{ const s = JSON.parse(localStorage.getItem('runway.v2')||'null'); if(s) state = {...state, ...s}; }catch(e){}
 if(!state.target || isNaN(new Date(state.target))) state.target = defTarget;
 const save = () => { try{ localStorage.setItem('runway.v2', JSON.stringify(state)); }catch(e){} };
@@ -658,6 +761,7 @@ document.querySelectorAll('.i').forEach(b => b.addEventListener('click', () => {
 /* ---------- tabs ---------- */
 function tab(t){
   state.tab = t; save();
+  jarClose();          // a drill-down is where you were, not where you left off
   document.querySelectorAll('[data-tab]').forEach(d => d.hidden = d.dataset.tab !== t);
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.go === t));
   headline(t);
@@ -669,6 +773,15 @@ function tab(t){
 function headline(t){
   const {dayIndex} = weekBounds();
   if(t === 'dash'){
+    // Swiped back, the header is what says which week you are reading — the cards below
+    // look identical whatever week they hold, so the date range has to be somewhere.
+    if(wkBack){
+      const V = viewedWeek();
+      $('pagetitle').textContent = wkBack === 1 ? 'Last week' : `${wkBack} weeks ago`;
+      $('stamp1').textContent = `${dshort(V.monday)} – ${dshort(V.days[6])}`;
+      $('stamp2').textContent = 'complete week';
+      return;
+    }
     $('pagetitle').textContent = dayIndex === 1 ? 'New week' : 'This week';
     const wd = asOf.toLocaleDateString('en-AU',{weekday:'short'}), dm = asOf.toLocaleDateString('en-AU',{day:'numeric',month:'short'});
     $('stamp1').textContent = `${wd} ${dm}`;   // "Wed 3 Sept", not en-AU's "Wed, 3 Sept"
@@ -695,10 +808,39 @@ function weekBounds(){
   const days = Array.from({length:7}, (_,i) => new Date(monday.getTime() + i*864e5));
   return {dayIndex, monday, days};
 }
+// Days come from `dash_days` rather than the fortnight window: the window reaches 14 days,
+// which capped how far the swipe below could go for a reason that was an accident of which
+// window happens to be daily.
+const DAYROW = {}; (M.dash_days || []).forEach(r => DAYROW[r.p] = r);
 function dailyRows(days){
-  // The fortnight window (13 days, daily granularity) always covers the current week.
-  const byDate = {}; M.windows.fortnight.series.forEach(r => byDate[r.p] = r);
-  return days.map(d => byDate[d.toISOString().slice(0,10)] || null);
+  return days.map(d => DAYROW[d.toISOString().slice(0,10)] || null);
+}
+
+/* ---------- dashboard: pulling back through previous weeks ---------- */
+// Don asked to be able to read this week against the last, so every card above "Where it
+// goes" moves together through recent weeks. Where it goes stays put deliberately — it
+// answers a different question over a window of its own, and dragging it along would have
+// made its period selector mean two things at once.
+//
+// Not persisted, unlike the rest of `state`: opening the app should always land on this
+// week. A dashboard that remembered it was three weeks back would be lying about "now".
+let wkBack = 0;
+const maxBack = (() => {
+  const first = (M.dash_days || [])[0];
+  if(!first) return 0;
+  // Whole weeks between the earliest day held and the Monday just gone. Floor, not round:
+  // a partial week at the far end has no strip to draw.
+  const {monday} = weekBounds();
+  return Math.max(0, Math.floor((monday - new Date(first.p)) / (7*864e5)));
+})();
+
+// The week on screen. Everything the cards render is derived from this rather than from
+// `weekBounds()` directly, so one offset moves the whole screen.
+function viewedWeek(){
+  const {monday: now, dayIndex} = weekBounds();
+  const monday = new Date(now.getTime() - wkBack*7*864e5);
+  return {monday, days: Array.from({length:7}, (_,i) => new Date(monday.getTime() + i*864e5)),
+          elapsed: wkBack === 0 ? dayIndex : 7, current: wkBack === 0};
 }
 
 function week(){
@@ -708,8 +850,10 @@ function week(){
   const plannedJars = DASH_JARS.filter(j => T[j] != null);
   const weeklyPlan = plannedJars.reduce((a,j) => a + T[j], 0);
   const dailyTarget = weeklyPlan/7;
-  const {dayIndex, days} = weekBounds();
-  const monday = dayIndex === 1;
+  const V = viewedWeek();
+  // The Monday screen belongs to the current week only. Swiped back, every week is complete,
+  // so it gets the ordinary strip with all seven days elapsed.
+  const monday = V.current && V.elapsed === 1;
 
   headline(state.tab);
   $('hero').classList.toggle('mon', monday);
@@ -721,25 +865,36 @@ function week(){
 
   if(monday){ heroMonday(T, plannedJars, weeklyPlan, dailyTarget); }
   else {
-    const rows = dailyRows(days);
+    const rows = dailyRows(V.days);
     const daySpend = r => r ? plannedJars.reduce((a,j) => a + (r[j]||0), 0) : 0;
-    const spentToDate = rows.slice(0, dayIndex).reduce((a,r) => a + daySpend(r), 0);
-    heroMidweek(weeklyPlan, dailyTarget, dayIndex, rows, daySpend, spentToDate, dailyTarget*dayIndex);
-    jarsCard(T, dayIndex);
+    const spentToDate = rows.slice(0, V.elapsed).reduce((a,r) => a + daySpend(r), 0);
+    heroMidweek(weeklyPlan, dailyTarget, V.elapsed, rows, daySpend, spentToDate, dailyTarget*V.elapsed, V);
+    // Totals come from the same rows the strip is drawn from, so the jar bars and the strike
+    // above them can never disagree about what the week cost.
+    const spent = {};
+    for(const j of DASH_JARS) spent[j] = rows.slice(0, V.elapsed).reduce((a,r) => a + (r ? r[j]||0 : 0), 0);
+    jarsCard(T, V.elapsed, spent);
   }
   extraSaved(T, plannedJars, monday);
+  weekNav();
 }
 
-function heroMidweek(weeklyPlan, dailyTarget, dayIndex, rows, daySpend, spentToDate, targetToDate){
-  $('herolabel').textContent = 'So far this week';
+function heroMidweek(weeklyPlan, dailyTarget, dayIndex, rows, daySpend, spentToDate, targetToDate, V){
+  // A finished week is not "so far", and its plan figure is the whole week's, not a
+  // to-date slice — saying "target by today" over a week that ended a fortnight ago would
+  // be quietly wrong about what it is comparing.
+  const done = V && !V.current;
+  $('herolabel').textContent = done ? 'That week' : 'So far this week';
   const scale = .34, plotH = 66;
   const tgtY = Math.min(plotH, dailyTarget*scale);
   const letters = ['Mo','Tu','We','Th','Fr','Sa','Su'];
   const cellW = 'calc((100% - 36px)/7)';
   const savedRow = [], colRow = [], dayRow = [];
-  let tick = '';
+  let tick = '', maxCol = 0;
   for(let i=0;i<7;i++){
-    const r = rows[i], elapsed = i < dayIndex, today = i === dayIndex-1;
+    // No "today" marker on a week that has ended — otherwise the last Sunday of every past
+    // week would be flagged as though it were now.
+    const r = rows[i], elapsed = i < dayIndex, today = !done && i === dayIndex-1;
     if(today) tick = `<div class="tick" style="left:calc(${cellW}*${i} + ${6*i}px);width:${cellW}"></div>`;
     dayRow.push(`<div class="${today?'today':''}">${letters[i]}</div>`);
     if(!elapsed){
@@ -758,7 +913,14 @@ function heroMidweek(weeklyPlan, dailyTarget, dayIndex, rows, daySpend, spentToD
     const total = raw.reduce((a,x)=>a+x, 0);
     // §11 leaves the over-target day undesigned; it should rise above the line, but unbounded
     // it climbs into the figure above the strip, so the column tops out at 1.5x the plot.
+    // Capping alone wasn't enough: at 1.5x a column still overflows 33px upward and draws
+    // straight over the saved-dollar row and the hero's caption. Rarely visible mid-week,
+    // but every big day in a finished week hit it — so the plot reserves exactly the
+    // overflow it is about to draw (see maxCol below) and nothing lands on the text. The
+    // scale itself stays fixed across weeks on purpose: it is what makes two weeks
+    // comparable, which is the entire point of being able to swipe between them.
     const shrink = total > plotH*1.5 ? plotH*1.5/total : 1;
+    maxCol = Math.max(maxCol, total*shrink);
     const blocks = jarsToday.map((j,ix) => [j, raw[ix]*shrink]).reverse()
       .map(([j,h]) => `<i style="height:${h.toFixed(1)}px;background:var(--${j})"></i>`).join('');
     colRow.push(`<div class="col">${blocks}</div>`);
@@ -767,11 +929,11 @@ function heroMidweek(weeklyPlan, dailyTarget, dayIndex, rows, daySpend, spentToD
     <div class="herofig">
       <div class="n">$${fmt(Math.max(0,spentToDate))}</div>
       <div class="of">/ $${fmt(targetToDate)}</div>
-      <div class="cap">target by today</div>
+      <div class="cap">${done ? 'the week\'s plan' : 'target by today'}</div>
     </div>
     <div class="dstrip">
       <div class="savedrow">${savedRow.join('')}</div>
-      <div class="plot">
+      <div class="plot" style="margin-top:${maxCol > plotH ? Math.ceil(maxCol-plotH)+4 : 0}px">
         <div class="tgtline" style="bottom:${tgtY.toFixed(0)}px"></div>
         <div class="tgtlab" style="bottom:${(tgtY+2).toFixed(0)}px">$${Math.round(dailyTarget)} a day</div>
         ${tick}
@@ -814,35 +976,45 @@ function heroMonday(T, plannedJars, weeklyPlan, dailyTarget){
   $('planfig').innerHTML = `<b>$${fmt(weeklyPlan)}</b><span>$${Math.round(dailyTarget)} a day · nothing spent yet</span>`;
 }
 
-function jarsCard(T, dayIndex){
-  const C = M.checkin, pace = (dayIndex/7*100).toFixed(1);
-  $('jarsleft').textContent = `$${fmt(DASH_JARS.reduce((a,j)=>a+Math.max(0,(T[j]||0)-C.this_week[j]),0))} left`;
+function jarsCard(T, dayIndex, wkSpend){
+  const pace = (dayIndex/7*100).toFixed(1);
+  // "left" on a finished week is what was left at the end of it, not what is still to spend.
+  $('jarsleft').textContent = `$${fmt(DASH_JARS.reduce((a,j)=>a+Math.max(0,(T[j]||0)-wkSpend[j]),0))} `
+    + (dayIndex < 7 ? 'left' : 'unspent');
+  // Every row opens that jar's own view, so every row is a button — including Fun, which has
+  // no target and the least to say here, and therefore the most to gain from the drill-down.
   const rows = DASH_JARS.map((j,i) => {
     const cls = `jarrow${i===0?' first':''}${i===DASH_JARS.length-1?' last':''}`;
     const dot = `<i style="background:var(--${j})"></i>`;
-    const spent = C.this_week[j], target = T[j];
+    const go = `<i class="go">›</i>`;
+    const open = `<button class="${cls}" data-jar="${j}" aria-label="${JN[j]} — open this jar"`;
+    const spent = wkSpend[j], target = T[j];
     if(!target){
-      return `<div class="${cls} dim"><div class="nm">${dot}${JN[j]}</div>
+      return `${open}><div class="nm">${dot}${JN[j]}</div>
         <div class="bar notarget"><div class="zero">$${fmt(spent)}</div></div>
-        <div class="gut none">—</div></div>`;
+        <div class="gut none">—</div>${go}</button>`;
     }
     const gut = `<div class="gut">$${fmt(Math.abs(target-spent))}${target-spent<0?' over':''}</div>`;
-    const marker = `<div class="pace" style="left:${pace}%"></div>`;
+    // The pace marker answers "how far through the week am I". A finished week has no
+    // answer to that, so it gets no marker rather than a line pinned to its right edge.
+    const marker = dayIndex < 7 ? `<div class="pace" style="left:${pace}%"></div>` : '';
     if(spent <= 0){   // nothing spent — the figure sits on the track, no fill drawn at all
-      return `<div class="${cls}"><div class="nm">${dot}${JN[j]}</div>
-        <div class="bar flat"><div class="zero">$${fmt(spent)}</div>${marker}</div>${gut}</div>`;
+      return `${open}><div class="nm">${dot}${JN[j]}</div>
+        <div class="bar flat"><div class="zero">$${fmt(spent)}</div>${marker}</div>${gut}${go}</button>`;
     }
     const frac = Math.min(1, spent/target), pct = (frac*100).toFixed(1);
     const ink = j==='living' ? '#12233a' : j==='eatout' ? '#0d3325' : j==='giving' ? '#1b1140' : '#3a1503';
-    return `<div class="${cls}" data-jar="${j}" data-pct="${pct}">
+    return `${open} data-pct="${pct}">
       <div class="nm">${dot}${JN[j]}</div>
       <div class="bar"><div class="fill inside" style="width:${pct}%;background:var(--${j});color:${ink}"><span class="figlabel">$${fmt(spent)}</span></div>${marker}</div>
-      ${gut}</div>`;
+      ${gut}${go}</button>`;
   });
   $('jarrows').innerHTML = rows.join('');
+  $('jarrows').querySelectorAll('.jarrow').forEach(row =>
+    row.addEventListener('click', () => jarOpen(row.dataset.jar)));
   // The fill/label pairing can only be judged once it is laid out — the same figure reads fine
   // inside a wide fill and clips mid-glyph inside a narrow one, so measure rather than guess.
-  $('jarrows').querySelectorAll('.jarrow[data-jar]').forEach(row => {
+  $('jarrows').querySelectorAll('.jarrow[data-pct]').forEach(row => {
     const fill = row.querySelector('.fill'), label = row.querySelector('.figlabel');
     if(!fill || !label) return;
     if(fill.clientWidth - 8 < label.scrollWidth){
@@ -857,8 +1029,103 @@ function jarsCard(T, dayIndex){
   });
 }
 
+/* ---------- dashboard: one jar on its own ---------- */
+// Reached by tapping a jar row. It answers three questions about that jar and nothing else:
+// what it costs now, whether that is normal, and what it goes on. Two things are deliberately
+// absent — the 2/4/8/13/26-week change table, and the word "burn" in the chart's title. Burn
+// belongs to a pot being drawn down; a category has spending. Don asked for both explicitly.
+let openJar = null;
+const sgn = v => (v<0 ? '−$' : '$') + fmt(Math.abs(v));
+
+function jarOpen(j){
+  openJar = j;
+  $('dashmain').hidden = true; $('jarview').hidden = false;
+  $('pagetitle').textContent = JN[j];      // the header carries the name, so the panel needn't
+  jarView();
+  window.scrollTo({top:0, behavior:'instant'});
+}
+function jarClose(){
+  if(!openJar) return;
+  openJar = null;
+  $('jarview').hidden = true; $('dashmain').hidden = false;
+  headline('dash');
+}
+
+function jarView(){
+  const j = openJar, W = M.windows[state.jarwin], C = M.checkin, T = jarTargets();
+  const {dayIndex} = weekBounds(), d = C.trend_1w[j] || 0;
+
+  // The headline is the trend, not the window — the same smoothed figure every other card
+  // leads with, so tapping a jar doesn't quietly change what "Living" means.
+  $('jvrate').textContent = '$' + fmt(M.burn[j+'_trend_wk']);
+  $('jvsub').innerHTML = [
+    T[j] ? `<b>$${fmt(C.this_week[j])}</b> of $${fmt(T[j])} this week, day ${dayIndex} of 7`
+         : `<b>$${fmt(C.this_week[j])}</b> so far this week — no weekly target`,
+    Math.abs(d) < 5 ? 'trend steady on last week'
+                    : `trend ${d<0?'down':'up'} <b>$${fmt(Math.abs(d))}</b> a week since last week`
+  ].join(' · ');
+
+  // Across periods: the same jar over every span, so a loud fortnight can be read against
+  // what normal looks like. The selected window is marked rather than removed — the point is
+  // the comparison, and dropping the row you are looking at breaks it.
+  const per = WINS.map(w => ({w, label: M.windows[w].label, v: M.windows[w].by_jar_net[j] || 0}));
+  const pmax = Math.max(1, ...per.map(p => Math.abs(p.v)));
+  $('jvper').innerHTML = per.map(p => `<div class="r${p.w===state.jarwin?' on':''}">
+    <div class="k">${p.label}</div>
+    <div class="t"><b style="width:${Math.max(2, Math.abs(p.v)/pmax*100).toFixed(0)}%;background:var(--${j})"></b></div>
+    <div class="v">${sgn(p.v)}</div></div>`).join('');
+
+  // Spending over time: the burn chart's frame, one jar, and no trend line.
+  const rows = W.series, daily = W.gran === 'D';
+  const at = r => Math.max(0, r[j]);
+  const {x, y, bw, grid, axis, hits} = chartFrame(rows, Math.max(...rows.map(at), 1));
+  const bars = rows.map((r,i) => at(r) <= 0 ? ''
+    : `<rect x="${x(i)-bw/2}" y="${y(at(r))}" width="${bw}" height="${Math.max(0, y(0)-y(at(r)))}" rx="2" fill="var(--${j})"/>`).join('');
+  $('jvchart').innerHTML = `<svg viewBox="0 0 ${CH.W} ${CH.H}" role="img" aria-label="${JN[j]} spending by ${daily?'day':'week'}">${grid}${bars}${axis}<g>${hits}</g></svg><div class="tip"></div>`;
+  wireTip($('jvchart'), rows, x, r => y(at(r)), r => `<b>${daily?'':'w/c '}${dshort(r.p)}</b> · ${sgn(r[j])}`);
+
+  jarWig(j, W);
+}
+
+// The jar's categories, and the ledger that closes them onto what it actually burns.
+function jarWig(j, W){
+  const cats = W.where_it_goes.filter(r => r.jar === j), adj = (W.adjust || {})[j] || [];
+  const gross = W.by_jar[j] || 0, net = W.by_jar_net[j] || 0;
+  const rollup = (M.wig.rollup_jars || []).includes(j);
+  const spans = state.jarwin === 'fy' || state.jarwin === 'all';
+  // With adjustments in play the rows sum to what was paid at the till, and the ledger below
+  // brings that down to the burn figure. Stating the till total here is what makes the list
+  // add up to something on screen rather than to a number the reader has to take on faith.
+  $('jvwigsum').innerHTML = `since ${(spans ? dshortY : dshort)(W.start)} · `
+    + `<b>${sgn(adj.length ? gross : net)}</b> per week${adj.length ? ' at the till' : ''}`;
+
+  if(rollup){
+    // Nothing to break down: these jars are assigned by tag, so their categories would be the
+    // merchants they happened to land at, which says nothing the jar name doesn't.
+    $('jvwig').innerHTML = '';
+    $('jvledger').innerHTML = '';
+    $('jvnote').hidden = false;
+    $('jvnote').innerHTML = `${JN[j]} is assigned by its Up tag rather than by what the merchant sells, so there's no category breakdown behind it — a coffee shouted for someone else is ${JN[j].toLowerCase()}, not eating out. The figure above is the whole of it.`;
+    return;
+  }
+  const max = cats[0]?.per_week || 1;
+  $('jvnote').hidden = true;
+  $('jvwig').innerHTML = cats.map(r => `<div>
+    <div class="top"><div class="nm"><i style="background:var(--${j})"></i><span>${r.sub}</span></div><div class="v">$${fmt(r.per_week)}</div></div>
+    <div class="track"><b style="width:${(r.per_week/max*100).toFixed(0)}%;background:var(--${j})"></b></div></div>`).join('');
+  $('jvledger').innerHTML = adj.length
+    ? adj.map(a => `<div class="r"><span>${a.label}</span><span>${sgn(a.per_week)}</span></div>`).join('')
+      + `<div class="r tot"><span>${JN[j]} burn</span><span>${sgn(net)} a week</span></div>`
+    : '';
+}
+
 function extraSaved(T, plannedJars, monday){
-  const series = M.windows.all.series.slice(-5);
+  // The five completed weeks behind whichever week is on screen — swiped back, this has to
+  // move too, or the card would be showing a run that reaches past the week above it.
+  // series[-1] is the last completed week, which is wkBack 1, so the viewed week's run ends
+  // at length - wkBack.
+  const all = M.windows.all.series, end = all.length - wkBack;
+  const series = all.slice(Math.max(0, end-5), end);
   const card = $('xsaved');
   // Omitted rather than zeroed before there is history, and on Monday the hero carries it.
   if(monday || series.length < 5){ card.hidden = true; return; }
@@ -872,9 +1139,82 @@ function extraSaved(T, plannedJars, monday){
     const colour = last ? 'var(--saved)' : prev ? 'var(--saved-prev)' : 'var(--saved-old)';
     return `<i style="height:${Math.max(4, v/max*32).toFixed(0)}px;background:${colour}"></i>`;
   }).join('');
-  card.innerHTML = `<div class="lab">Extra saved last week<b>$${fmt(saved[saved.length-1])}</b></div>
+  card.innerHTML = `<div class="lab">${wkBack ? 'Extra saved the week before' : 'Extra saved last week'}<b>$${fmt(saved[saved.length-1])}</b></div>
     <div class="bars">${bars}</div>
     <div class="cap">5-week run</div>`;
+}
+
+/* ---------- dashboard: week navigation ---------- */
+function weekNav(){
+  const nav = $('wknav');
+  nav.hidden = maxBack < 1;                     // one week of data has nothing to swipe to
+  if(nav.hidden) return;
+  $('wkprev').disabled = wkBack >= maxBack;
+  $('wknext').disabled = wkBack <= 0;
+  // Oldest on the left, this week on the right — the axis Don reads everywhere else.
+  let t = '';
+  for(let i = maxBack; i >= 0; i--)
+    t += `<i class="${i === wkBack ? 'on' : ''}${i === 0 ? ' now' : ''}"></i>`;
+  $('wkticks').innerHTML = t;
+}
+
+// Moving between weeks: a short slide in the direction of travel, then the new week. Not a
+// carousel — two weeks of cards on screen at once is a lot of DOM for a gesture that ends
+// in one of them, and the fade reads as "this changed" without pretending to be physical.
+function goWeek(n, dir){
+  const t = Math.max(0, Math.min(maxBack, n));
+  if(t === wkBack) return;
+  wkBack = t;
+  const el = $('weekcards');
+  el.style.transition = 'none';
+  el.style.transform = `translateX(${dir > 0 ? -14 : 14}px)`;
+  el.style.opacity = '.3';
+  week();
+  requestAnimationFrame(() => {
+    el.style.transition = 'transform .2s ease-out, opacity .2s ease-out';
+    el.style.transform = 'translateX(0)';
+    el.style.opacity = '1';
+  });
+}
+
+// Horizontal drag on the cards. The axis is decided once per gesture and never revisited,
+// so a diagonal scroll can't start pulling weeks sideways halfway down the page.
+function weekSwipe(el){
+  let x0 = null, y0 = 0, dx = 0, axis = null;
+  const reset = () => { x0 = null; axis = null; el.style.transition = ''; el.style.transform = ''; };
+  el.addEventListener('pointerdown', e => {
+    if(e.pointerType === 'mouse' && e.button !== 0) return;
+    x0 = e.clientX; y0 = e.clientY; dx = 0; axis = null;
+  });
+  el.addEventListener('pointermove', e => {
+    if(x0 === null) return;
+    const ax = e.clientX - x0, ay = e.clientY - y0;
+    if(axis === null){
+      if(Math.abs(ax) < 6 && Math.abs(ay) < 6) return;
+      axis = Math.abs(ax) > Math.abs(ay)*1.2 ? 'x' : 'y';
+    }
+    if(axis !== 'x') return;
+    dx = ax;
+    // Resistance at the ends: the stack still moves, so the gesture is understood, but it
+    // is obvious nothing is there. Pulling against a dead edge feels like a broken page.
+    if((dx > 0 && wkBack >= maxBack) || (dx < 0 && wkBack <= 0)) dx *= .25;
+    el.style.transition = 'none';
+    el.style.transform = `translateX(${dx.toFixed(1)}px)`;
+  });
+  const settle = () => {
+    if(x0 === null) return;
+    const threshold = Math.max(46, (el.clientWidth || 400) * .2);
+    const step = dx > threshold ? 1 : dx < -threshold ? -1 : 0;   // right = back in time
+    const from = dx;
+    reset();
+    if(step) goWeek(wkBack + step, step);
+    else if(Math.abs(from) > 2){          // snapped back: let it travel rather than jump
+      el.style.transition = 'transform .18s ease-out';
+      el.style.transform = 'translateX(0)';
+    }
+  };
+  el.addEventListener('pointerup', settle);
+  el.addEventListener('pointercancel', settle);
 }
 
 /* ---------- strategy: runway timeline + scenarios ---------- */
@@ -1026,32 +1366,50 @@ function whatChanged(){
   $('ciwhat').innerHTML = w.join('');
 }
 
+/* ---------- bar charts: the frame both of them share ---------- */
+// Strategy's burn chart and the jar view's spending chart are the same chart with different
+// marks — same box, same grid, same date axis, same tap targets. The frame lives here so the
+// two can't drift into looking like charts of different things.
+const CH = {W:448, H:200, padL:38, padR:6, padT:12, padB:26};
+function chartFrame(rows, maxV){
+  const {W,H,padL,padR,padT,padB} = CH, iw = W-padL-padR, ih = H-padT-padB;
+  const step = maxV>4000?2000:maxV>2000?1000:maxV>800?500:maxV>300?200:100, top = Math.max(step, Math.ceil(maxV/step)*step);
+  const x = i => padL + (i+0.5)*(iw/rows.length), y = v => padT + ih - (v/top)*ih;
+  const slot = iw/rows.length;
+  let grid=''; for(let v=0; v<=top; v+=step) grid += `<line x1="${padL}" x2="${W-padR}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${padL-6}" y="${y(v)+4}" text-anchor="end" font-size="10" fill="var(--ink-3)">${v>=1000?(v/1000)+'k':v}</text>`;
+  // Stepped from the right, so the most recent period always keeps its date.
+  const lstep = rows.length>10 ? Math.ceil(rows.length/5) : 1;
+  const axis = rows.map((r,i) => (rows.length-1-i)%lstep===0 ? `<text x="${x(i)}" y="${H-8}" text-anchor="middle" font-size="10" fill="var(--ink-3)">${dshort(r.p)}</text>` : '').join('');
+  const hits = rows.map((r,i) => `<rect data-i="${i}" x="${x(i)-slot/2}" y="${padT}" width="${slot}" height="${ih}" fill="transparent"/>`).join('');
+  return {x, y, slot, bw: Math.max(3, Math.min(22, slot*0.62)), gap: rows.length>30?1:2, grid, axis, hits};
+}
+// `atY` is where the tip should sit for a row — the top of whatever that chart drew there.
+function wireTip(host, rows, x, atY, body){
+  const tip = host.querySelector('.tip'), svg = host.querySelector('svg');
+  const show = e => { const t = e.target.closest('rect[data-i]'); if(!t) return;
+    const r = rows[+t.dataset.i], sx = svg.getBoundingClientRect().width/CH.W;
+    tip.style.left = (x(+t.dataset.i)*sx)+'px'; tip.style.top = (atY(r)*sx)+'px';
+    tip.innerHTML = body(r); tip.classList.add('on'); };
+  svg.addEventListener('pointermove', show); svg.addEventListener('pointerdown', show);
+  svg.addEventListener('pointerleave', () => tip.classList.remove('on'));
+}
+
 /* ---------- strategy: burn chart ---------- */
 function chart(){
   const Wn = M.windows[state.win], rows = Wn.series, daily = Wn.gran === 'D';
   $('winsum').innerHTML = `<span>since <b>${dshort(Wn.start)}</b></span><span>avg <b class="num">$${fmt(Wn.avg_burn)}</b>/${daily?'day':'wk'}</span><span>living <b class="num">$${fmt(Wn.avg_living)}</b>/${daily?'day':'wk'}</span>`;
-  const W=448, H=200, padL=38, padR=6, padT=12, padB=26, iw=W-padL-padR, ih=H-padT-padB;
   const tot = r => JARS.reduce((a,j) => a + Math.max(0, r[j]), 0);
-  const maxV = Math.max(...rows.map(r => Math.max(tot(r), r.hi||0, r.trend||0)), 1);
-  const step = maxV>4000?2000:maxV>2000?1000:maxV>800?500:maxV>300?200:100, top = Math.max(step, Math.ceil(maxV/step)*step);
-  const x = i => padL + (i+0.5)*(iw/rows.length), y = v => padT + ih - (v/top)*ih;
-  const slot = iw/rows.length, bw = Math.max(3, Math.min(22, slot*0.62)), gap = rows.length>30?1:2;
-  let g=''; for(let v=0; v<=top; v+=step) g += `<line x1="${padL}" x2="${W-padR}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${padL-6}" y="${y(v)+4}" text-anchor="end" font-size="10" fill="var(--ink-3)">${v>=1000?(v/1000)+'k':v}</text>`;
+  const peak = r => Math.max(tot(r), r.hi||0, r.trend||0);
+  const {x, y, bw, gap, grid, axis, hits} = chartFrame(rows, Math.max(...rows.map(peak), 1));
   const bars = rows.map((r,i) => { let acc=0, s=''; for(const j of JARS){ const v=Math.max(0,r[j]); if(v<=0) continue; const y1=y(acc+v), h=Math.max(0,y(acc)-y1-(acc>0?gap:0)); s+=`<rect x="${x(i)-bw/2}" y="${y1}" width="${bw}" height="${h}" rx="2" fill="var(--${j})"/>`; acc+=v; } return s; }).join('');
   const tr = rows.map((r,i) => r.trend!==null ? [x(i), y(r.trend), r.lo!==null?y(r.lo):null, r.hi!==null?y(r.hi):null] : null).filter(Boolean);
   const band = (!daily && tr.length>1) ? `<path d="M${tr.map(p=>p[0]+','+p[3]).join('L')}L${tr.slice().reverse().map(p=>p[0]+','+p[2]).join('L')}Z" fill="var(--band)"/>` : '';
   const line = tr.length>1 ? `<path d="M${tr.map(p=>p[0]+','+p[1]).join('L')}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>` : '';
   const last = tr[tr.length-1];
   const end = last ? `<circle cx="${last[0]}" cy="${last[1]}" r="5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/><text x="${last[0]-8}" y="${last[1]-10}" text-anchor="end" font-size="11" font-weight="600" fill="var(--ink)">$${fmt(rows[rows.length-1].trend)}</text>` : '';
-  const lstep = rows.length>26?Math.ceil(rows.length/5):rows.length>10?Math.ceil(rows.length/5):1;
-  const xl = rows.map((r,i) => (rows.length-1-i)%lstep===0 ? `<text x="${x(i)}" y="${H-8}" text-anchor="middle" font-size="10" fill="var(--ink-3)">${dshort(r.p)}</text>` : '').join('');
-  const hits = rows.map((r,i) => `<rect data-i="${i}" x="${x(i)-slot/2}" y="${padT}" width="${slot}" height="${ih}" fill="transparent"/>`).join('');
-  $('chart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${daily?'Daily':'Weekly'} burn by jar with trend line">${g}${band}${bars}${line}${end}${xl}<g>${hits}</g></svg><div class="tip" id="tip"></div>`;
-  const tip = $('tip'), svg = $('chart').querySelector('svg');
-  const show = e => { const t = e.target.closest('rect[data-i]'); if(!t) return; const i=+t.dataset.i, r=rows[i], sx=svg.getBoundingClientRect().width/W;
-    tip.style.left = (x(i)*sx)+'px'; tip.style.top = (y(Math.max(tot(r), r.hi||0, r.trend||0))*sx)+'px';
-    tip.innerHTML = `<b>${daily?'':'w/c '}${dshort(r.p)}</b> · $${fmt(r.burn)}<br>${JARS.filter(j=>r[j]).map(j=>`${JN[j].toLowerCase()} $${fmt(r[j])}`).join(' · ')||'nothing spent'}`; tip.classList.add('on'); };
-  svg.addEventListener('pointermove', show); svg.addEventListener('pointerdown', show); svg.addEventListener('pointerleave', () => tip.classList.remove('on'));
+  $('chart').innerHTML = `<svg viewBox="0 0 ${CH.W} ${CH.H}" role="img" aria-label="${daily?'Daily':'Weekly'} burn by jar with trend line">${grid}${band}${bars}${line}${end}${axis}<g>${hits}</g></svg><div class="tip"></div>`;
+  wireTip($('chart'), rows, x, r => y(peak(r)), r =>
+    `<b>${daily?'':'w/c '}${dshort(r.p)}</b> · $${fmt(r.burn)}<br>${JARS.filter(j=>r[j]).map(j=>`${JN[j].toLowerCase()} $${fmt(r[j])}`).join(' · ')||'nothing spent'}`);
   $('burnlegend').innerHTML = JARS.map(j=>`<span><i style="background:var(--${j})"></i>${JN[j]}</span>`).join('') + `<span><i class="line" style="background:var(--accent)"></i>Trend</span>`;
   $('changes').innerHTML = M.trend_changes.map(c => { const s=c.spark, mn=Math.min(...s), mx=Math.max(...s);
     const pts = s.map((v,i) => `${(i/(s.length-1))*48},${14-((v-mn)/((mx-mn)||1))*12+1}`).join(' ');
@@ -1206,7 +1564,11 @@ $('tInc').addEventListener('change', e => { state.tInc = Math.max(0, +e.target.v
 // money() redraws the deposit card itself, and the HELP balance now moves net worth too —
 // calling deposit() alone left the Money tab showing a debt the user had just cleared.
 $('tHelp').addEventListener('change', e => { state.tHelp = Math.max(0, +e.target.value||0); save(); taxNote(); money(); });
-segs('range','win',chart); segs('wigrange','wigwin',wig);
+segs('range','win',chart); segs('wigrange','wigwin',wig); segs('jvrange','jarwin',jarView);
+$('jarback').addEventListener('click', jarClose);
+$('wkprev').addEventListener('click', () => goWeek(wkBack + 1, 1));
+$('wknext').addEventListener('click', () => goWeek(wkBack - 1, -1));
+weekSwipe($('weekcards'));
 
 const toMon = (8-asOf.getDay())%7 || 7;
 $('stamp2').dataset.checkin = `next check-in in ${toMon} day${toMon>1?'s':''}`;
